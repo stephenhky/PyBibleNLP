@@ -155,7 +155,7 @@ class KJVParser:
 
     def retrieveVersesIterator(self, bookabbr, startChap, startVerse, endChap, endVerse):
         # validation
-        if startChap > endChap:
+        if startChap > endChap or (startChap==endChap and startVerse>endVerse):
             raise BibleException('Wrong chapter sequence: '+str(startChap)+'>'+str(endChap))
         if bookabbr != self.currentbook:
             self.parseBook(bookabbr)
