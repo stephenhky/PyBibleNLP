@@ -2,7 +2,8 @@ __author__ = 'hok1'
 
 import BookAbbrDict as abbr
 from collections import defaultdict
-import re, sys
+import re
+from BibleExceptions import BibleException, InvalidBibleChapterException, InvalidBibleLocationException, NoBibleBookException
 
 bknameref = {
     "Genesis": "gen",
@@ -112,7 +113,10 @@ class KJVParser:
         filepath = self.bookdir+'/'+'kjvdat.txt'
         self.currentbook = bookabbr
         self.bookcontent = defaultdict(lambda : {})
-        bookname = abbr.getBookName(bookabbr)
+        try:
+            bookname = abbr.getBookName(bookabbr)
+        except KeyError:
+            raise NoBibleBookException(bookabbr)
         datbookname = bknameref[bookname]
 
         bibdat = open(filepath, 'rb')
@@ -126,13 +130,49 @@ class KJVParser:
         bibdat.close()
         self.bookcontent = dict(self.bookcontent)
 
+    def getNumChapters(self, bookabbr):
+        if bookabbr != self.currentbook:
+            self.parseBook(bookabbr)
+        return len(self.bookcontent)
+
+    def getNumVerses(self, bookabbr, chap):
+        if bookabbr != self.currentbook:
+            self.parseBook(bookabbr)
+        if chap > self.getNumChapters(bookabbr):
+            raise InvalidBibleChapterException(bookabbr, chap)
+        return max(self.bookcontent[chap].keys())
+
     def retrieveVerse(self, bookabbr, chap, verse):
         if bookabbr != self.currentbook:
             self.parseBook(bookabbr)
         try:
             scripture = self.bookcontent[chap][verse]
         except KeyError:
-            sys.stderr.write('No verse: '+bookabbr+' '+str(chap)+':'+str(verse)+'\n')
-            scripture = ''
+            #sys.stderr.write('No verse: '+bookabbr+' '+str(chap)+':'+str(verse)+'\n')
+            #scripture = ''
+            raise InvalidBibleLocationException(bookabbr, chap, verse)
         return scripture
 
+    def retrieveVersesIterator(self, bookabbr, startChap, startVerse, endChap, endVerse):
+        # validation
+        if startChap > endChap:
+            raise BibleException('Wrong chapter sequence: '+str(startChap)+'>'+str(endChap))
+        if bookabbr != self.currentbook:
+            self.parseBook(bookabbr)
+        numChaps = self.getNumChapters(bookabbr)
+        if startChap > numChaps:
+            raise InvalidBibleChapterException(bookabbr, startChap)
+        if startVerse > self.getNumVerses(bookabbr, startChap):
+            raise InvalidBibleLocationException(bookabbr, startChap, startVerse)
+
+        # iterator
+        for chap in range(startChap, min(endChap, numChaps)+1):
+            startingVerse = startVerse if chap==startChap else 1
+            numVerses = self.getNumVerses(bookabbr, chap)
+            endingVerse = endVerse if chap==endChap and numVerses>=endVerse else numVerses
+            for verse in range(startingVerse, endingVerse+1):
+                yield (bookabbr, chap, verse, self.retrieveVerse(bookabbr, chap, verse))
+
+    def retrieveVerses(self, bookabbr, startChap, startVerse, endChap, endVerse):
+        versesIterator = self.retrieveVersesIterator(bookabbr, startChap, startVerse, endChap, endVerse)
+        return ' '.join([verseTuple[3] for verseTuple in versesIterator])
