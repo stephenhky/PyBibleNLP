@@ -7,28 +7,25 @@ import re
 
 
 class DocVectorizer:
-    def __init__(self, modelfilename, binary=True, toRemoveDigits=True, toLower=True, toRemoveStopWords=True,
-                 toStemWords=False):
+    def __init__(self, modelfilename, binary=True, toRemoveDigits=True, toLower=True, toRemoveStopWords=True):
         self.loadmodel(modelfilename, binary=binary)
         self.toRemoveDigits = toRemoveDigits
         self.toLower = toLower
         self.toRemoveStopWords = toRemoveStopWords
-        self.toStemWords = toStemWords
-
         self.tokenizer = nltk.tokenize.TreebankWordTokenizer()
-        if (self.toStemWords):
-            self.stemmer = nltk.stem.PorterStemmer()
 
     def loadmodel(self, modelfilename, binary=True):
         self.wmodel = word2vec.Word2Vec.load_word2vec_format(modelfilename, binary=binary)
 
-    def vectorizeDoc(self, docstr):
-        norm_docstr = re.sub('\\W', ' ', docstr)
-        if (self.toRemoveDigits):
-            norm_docstr = re.sub('\\d', ' ', norm_docstr)
-        norm_docstr = re.sub('\\s+', ' ', norm_docstr)
-        if (self.toRemoveStopWords):
-            pass
-        if (self.toLower):
-            norm_docstr = norm_docstr.lower()
+    def unloadmodel(self):
+        self.wmodel = None
 
+    def tokenizeDoc(self, docstr):
+        tokenizedDoc = self.tokenizer.tokenize(docstr)
+        if self.toRemoveDigits:
+            tokenizedDoc = filter(lambda token: re.match('\\d', token)==None, tokenizedDoc)
+        if self.toLower:
+            tokenizedDoc = map(lambda s: s.lower(), tokenizedDoc)
+        if self.toRemoveStopWords:
+            tokenizedDoc = filter(lambda s: not (s.lower() in nltk.corpus.stopwords.words()), tokenizedDoc)
+        return tokenizedDoc
