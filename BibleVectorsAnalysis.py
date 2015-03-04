@@ -20,7 +20,7 @@ class BibleBookAnalysis:
                     tokenVecs[token] = vec
         return tokenVecs
 
-    def getDocTermMatrix(self, books):
+    def getBookTermMatrix(self, books):
         veclist = []
         for book in books:
             vecs = np.load(self.npz_dir+'/'+book+'.npz')
@@ -34,5 +34,5 @@ class BibleBookAnalysis:
         doctermMatrix = np.matrix(np.array(veclist))
         return doctermMatrix
 
-    def getTermDocMatrix(self, books):
-        return np.transpose(self.getDocTermMatrix(books))
+    def getTermBookMatrix(self, books):
+        return np.transpose(self.getBookTermMatrix(books))
