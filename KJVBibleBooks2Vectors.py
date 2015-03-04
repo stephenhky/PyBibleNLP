@@ -5,6 +5,7 @@ import DocVectorization
 import BookAbbrDict
 import numpy as np
 import argparse
+import time
 
 def argument_parser():
     argv_parser = argparse.ArgumentParser(description='Parsing the KJV Books into vectors using word2vec')
@@ -17,7 +18,10 @@ if __name__ == '__main__':
     argv_parser = argument_parser()
     args = argv_parser.parse_args()
 
+    starttime = time.time()
+    print 'Initialzing parser'
     parser = KJVBibleParser.KJVParser(args.kjv_dir)
+    print 'Loading word2vec model'
     vectorizer = DocVectorization.DocVectorizer(args.word2vec_model)
 
     for bookabbr in BookAbbrDict.otbookdict.keys() + BookAbbrDict.ntbookdict.keys():
@@ -27,10 +31,14 @@ if __name__ == '__main__':
         booktext = parser.retrieveVerses(bookabbr, 1, 1, 200, 1)
         tokens, vectors = vectorizer.retrieveDocVectors(booktext)
 
-        print '   Writing to files...'
+        print '  Writing to files...'
         outputtokenfile = open(args.output_dir+'/'+bookabbr+'.tkn', 'wb')
         np.savez(outputtokenfile, tokens)
         outputnpzfile = open(args.output_dir+'/'+bookabbr+'.npz', 'wb')
         np.savez(outputnpzfile, vectors)
+
+    endtime = time.time()
+    print 'Finished.'
+    print 'Time elapsed = ', (endtime-starttime), ' sec'
 
     print 'Finished.'

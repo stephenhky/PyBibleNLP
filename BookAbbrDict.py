@@ -22,7 +22,7 @@ otbookdict = {
 		"ps": "Psalms",
 		"pr": "Proverbs",
 		"ec": "Ecclesiastes",
-		"so": "Song of Songs",
+		"so": "Song of Solomon",
 		"is": "Isaiah",
 		"je": "Jeremiah",
 		"la": "Lamentations",
