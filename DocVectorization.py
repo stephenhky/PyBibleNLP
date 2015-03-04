@@ -3,6 +3,7 @@ __author__ = 'hok1'
 from gensim.models import word2vec
 import nltk
 import re
+import numpy as np
 
 class DocVectorizer:
     def __init__(self, modelfilename, binary=True, toRemoveDigits=True, toLower=True, toRemoveStopWords=True):
@@ -33,4 +34,4 @@ class DocVectorizer:
     def retrieveDocVectors(self, docstr):
         tokens = self.tokenizeDoc(docstr)
         vectors = map(lambda token: self.wmodel[token] if (token in self.wmodel) else None, tokens)
-        return tokens, vectors
+        return tokens, np.array(vectors)
