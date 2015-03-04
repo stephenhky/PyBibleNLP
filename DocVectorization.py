@@ -2,9 +2,7 @@ __author__ = 'hok1'
 
 from gensim.models import word2vec
 import nltk
-import numpy as np
 import re
-
 
 class DocVectorizer:
     def __init__(self, modelfilename, binary=True, toRemoveDigits=True, toLower=True, toRemoveStopWords=True):
