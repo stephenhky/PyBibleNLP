@@ -25,11 +25,11 @@ class BibleBookAnalysis:
         for book in books:
             vecs = np.load(self.npz_dir+'/'+book+'.npz')
             vecs = vecs['arr_0']
-            tokens = np.load(self.npz_dir+'/'+book+'.tkn')
-            tokens = tokens['arr_0']
-            filteredPairs = filter(lambda pair: pair[1]!=None, zip(tokens, vecs))
-            vecs = map(lambda pair: pair[1], filteredPairs)
-            tokens = map(lambda pair: pair[0], filteredPairs)
+            #tokens = np.load(self.npz_dir+'/'+book+'.tkn')
+            #tokens = tokens['arr_0']
+            #filteredPairs = filter(lambda pair: pair[1]!=None, zip(tokens, vecs))
+            #vecs = map(lambda pair: pair[1], filteredPairs)
+            #tokens = map(lambda pair: pair[0], filteredPairs)
             veclist += [sum(vecs)]
         doctermMatrix = np.matrix(np.array(veclist))
         return doctermMatrix

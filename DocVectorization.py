@@ -34,4 +34,7 @@ class DocVectorizer:
     def retrieveDocVectors(self, docstr):
         tokens = self.tokenizeDoc(docstr)
         vectors = map(lambda token: self.wmodel[token] if (token in self.wmodel) else None, tokens)
-        return tokens, np.array(vectors)
+        filteredPairs = filter(lambda pair: pair[1]!=None, zip(tokens, vectors))
+        tokens = map(lambda pair: pair[0], filteredPairs)
+        vectors = np.array(map(lambda pair: pair[1], filteredPairs))
+        return tokens, vectors
