@@ -22,6 +22,8 @@ class DocVectorizer:
 
     def tokenizeDoc(self, docstr):
         tokenizedDoc = self.tokenizer.tokenize(docstr)
+        tokenizedDoc = filter(lambda t: re.match('\\W', t)==None, tokenizedDoc)
+        tokenizedDoc = map(lambda s: re.sub('\\W', '', s), tokenizedDoc)
         if self.toRemoveDigits:
             tokenizedDoc = filter(lambda token: re.match('\\d', token)==None, tokenizedDoc)
         if self.toLower:
@@ -29,3 +31,8 @@ class DocVectorizer:
         if self.toRemoveStopWords:
             tokenizedDoc = filter(lambda s: not (s.lower() in nltk.corpus.stopwords.words()), tokenizedDoc)
         return tokenizedDoc
+
+    def retrieveDocVectors(self, docstr):
+        tokens = self.tokenizeDoc(docstr)
+        vectors = map(lambda token: self.wmodel[token] if (token in self.wmodel) else None, tokens)
+        return tokens, vectors
