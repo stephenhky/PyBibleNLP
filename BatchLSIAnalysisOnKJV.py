@@ -13,9 +13,6 @@ def performLSIAnalysis(analyzer, books, outputfile):
     sorted_tokens = sorted(analyzer.tokenVecs.keys())
 
     writer = csv.writer(outputfile)
-    # writer.writerow(['ID']+sorted_tokens)
-    # for idx in range(len(s)):
-    #     writer.writerow([idx]+[1-cosine(U[:, idx], analyzer.tokenVecs[token]) for token in sorted_tokens])
     writer.writerow(['token']+range(len(s)))
     for token in sorted_tokens:
         writer.writerow([token]+[1-cosine(U[:, idx], analyzer.tokenVecs[token]) for idx in range(len(s))])
