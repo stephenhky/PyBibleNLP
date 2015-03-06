@@ -2,7 +2,7 @@ __author__ = 'hok1'
 
 import numpy as np
 
-from bible import BookAbbrDict as abbr
+from Bible import BookAbbrDict as abbr
 
 
 class BibleBookAnalysis:

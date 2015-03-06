@@ -6,7 +6,7 @@ import csv
 from scipy.spatial.distance import cosine
 import numpy as np
 
-from bible import BookAbbrDict as abbr
+from Bible import BookAbbrDict as abbr
 from vectorize.BibleVectorsAnalysis import BibleBookAnalysis
 
 
@@ -22,7 +22,7 @@ def performLSIAnalysis(analyzer, books, outputfile):
     outputfile.close()
 
 def main():
-    argv_parser = argparse.ArgumentParser(description='Analyzing bible books')
+    argv_parser = argparse.ArgumentParser(description='Analyzing Bible books')
     argv_parser.add_argument('npz_dir', help='token information directory')
     argv_parser.add_argument('analysis_pathprefix', help='prefix of the path of output analyses')
     args = argv_parser.parse_args()

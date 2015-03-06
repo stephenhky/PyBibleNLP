@@ -5,7 +5,7 @@ import argparse
 from scipy.spatial.distance import cosine
 import numpy as np
 
-from bible import BookAbbrDict as abbr
+from Bible import BookAbbrDict as abbr
 from vectorize.BibleVectorsAnalysis import BibleBookAnalysis
 
 
@@ -21,7 +21,7 @@ def performLSIAnalysis(npz_dir):
             print relevance
 
 if __name__ == '__main__':
-    argv_parser = argparse.ArgumentParser(description='Analyzing bible books')
+    argv_parser = argparse.ArgumentParser(description='Analyzing Bible books')
     argv_parser.add_argument('npz_dir', help='token information directory')
     args = argv_parser.parse_args()
     performLSIAnalysis(args.npz_dir)

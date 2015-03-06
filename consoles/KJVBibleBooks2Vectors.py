@@ -5,9 +5,9 @@ import time
 
 import numpy as np
 
-from bible.KJV import KJVBibleParser
+from Bible.KJV import KJVBibleParser
 from vectorize import DocVectorization
-from bible import BookAbbrDict
+from Bible import BookAbbrDict
 
 
 def argument_parser():
