@@ -1,11 +1,14 @@
 __author__ = 'stephenhky'
 
-import BookAbbrDict as abbr
-from scipy.spatial.distance import cosine
 import argparse
-import numpy as np
-from BibleVectorsAnalysis import BibleBookAnalysis
 import csv
+
+from scipy.spatial.distance import cosine
+import numpy as np
+
+from bible import BookAbbrDict as abbr
+from vectorize.BibleVectorsAnalysis import BibleBookAnalysis
+
 
 def performLSIAnalysis(analyzer, books, outputfile):
     termdocMatrix = analyzer.getTermBookMatrix(books)

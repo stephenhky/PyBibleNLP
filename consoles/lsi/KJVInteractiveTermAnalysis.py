@@ -1,10 +1,13 @@
 __author__ = 'stephenhky'
 
-import BookAbbrDict as abbr
-from scipy.spatial.distance import cosine
 import argparse
+
+from scipy.spatial.distance import cosine
 import numpy as np
-from BibleVectorsAnalysis import BibleBookAnalysis
+
+from bible import BookAbbrDict as abbr
+from vectorize.BibleVectorsAnalysis import BibleBookAnalysis
+
 
 def performLSIAnalysis(npz_dir):
     analyzer = BibleBookAnalysis(npz_dir)

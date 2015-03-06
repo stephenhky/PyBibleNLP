@@ -1,11 +1,14 @@
 __author__ = 'hok1'
 
-import KJVBibleParser
-import DocVectorization
-import BookAbbrDict
-import numpy as np
 import argparse
 import time
+
+import numpy as np
+
+from bible.KJV import KJVBibleParser
+from vectorize import DocVectorization
+from bible import BookAbbrDict
+
 
 def argument_parser():
     argv_parser = argparse.ArgumentParser(description='Parsing the KJV Books into vectors using word2vec')
@@ -25,7 +28,7 @@ if __name__ == '__main__':
     vectorizer = DocVectorization.DocVectorizer(args.word2vec_model)
 
     for bookabbr in BookAbbrDict.otbookdict.keys() + BookAbbrDict.ntbookdict.keys():
-        print 'Calculating '+BookAbbrDict.getBookName(bookabbr)
+        print 'Calculating '+ BookAbbrDict.getBookName(bookabbr)
 
         print '  Retrieving vectors...'
         booktext = parser.retrieveVerses(bookabbr, 1, 1, 200, 1)

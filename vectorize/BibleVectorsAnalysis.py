@@ -1,7 +1,9 @@
 __author__ = 'hok1'
 
 import numpy as np
-import BookAbbrDict as abbr
+
+from bible import BookAbbrDict as abbr
+
 
 class BibleBookAnalysis:
     def __init__(self, npz_dir):
