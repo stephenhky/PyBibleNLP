@@ -23,9 +23,10 @@ class LatentSemanticIndexing:
                 if not self.tokenVecs.has_key(token):
                     self.tokenVecs[token] = vec
 
-    def runLSI(self, books):
+    def runLSI(self, books, k=None):
         veclist = []
         self.books = books
+        self.k = k
         for book in self.books:
             vecs = np.load(self.npzdir+'/'+book+'.npz')
             vecs = vecs['arr_0']
@@ -34,6 +35,10 @@ class LatentSemanticIndexing:
         self.U, self.s, self.V = np.linalg.svd(self.termdocMatrix, full_matrices=False)
         self.U = np.matrix(self.U)
         self.V = np.matrix(self.V)
+        if k!=None:
+            self.U = self.U[:,:k]
+            self.s = self.s[:k]
+            self.V = self.V[:k,:]
 
     def reduceRankVec(self, vec, toTranspose=True):
         nvec = np.transpose(vec) if toTranspose else vec
