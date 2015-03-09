@@ -25,7 +25,8 @@ class LatentSemanticIndexing:
 
     def runLSI(self, books):
         veclist = []
-        for book in books:
+        self.books = books
+        for book in self.books:
             vecs = np.load(self.npzdir+'/'+book+'.npz')
             vecs = vecs['arr_0']
             veclist += [sum(vecs)]
@@ -34,15 +35,19 @@ class LatentSemanticIndexing:
         self.U = np.matrix(self.U)
         self.V = np.matrix(self.V)
 
-    def reduceRankVec(self, token):
+    def reduceRankVec(self, vec, toTranspose=True):
+        nvec = np.transpose(vec) if toTranspose else vec
+        return np.array(np.matrix(nvec)*self.U)*self.s
+
+    def reduceTokenRankVec(self, token):
         try:
             vec = self.tokenVecs[token]
         except KeyError:
             raise TokenNotFoundException(token)
-        return np.array(np.matrix(vec)*self.U)*self.s
+        return self.reduceRankVec(vec, toTranspose=False)
 
-    def query(self, queryToken):
-        reducedRankVec = self.reduceRankVec(queryToken)
-        cosines = [(token, 1-cosine(reducedRankVec, self.reduceRankVec(token))) for token in self.tokenVecs.keys()]
+    def queryDocs(self, queryToken):
+        reducedRankVec = self.reduceTokenRankVec(queryToken)
+        cosines = [(book, 1-cosine(reducedRankVec, self.reduceRankVec(self.termdocMatrix[:,id]))) for id, book in zip(range(len(self.books)), self.books)]
         cosines = sorted(cosines, key=lambda item: item[1], reverse=True)
         return cosines
