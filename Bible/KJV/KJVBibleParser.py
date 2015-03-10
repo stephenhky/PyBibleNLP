@@ -178,3 +178,16 @@ class KJVParser:
     def retrieveVerses(self, bookabbr, startChap, startVerse, endChap, endVerse):
         versesIterator = self.retrieveVersesIterator(bookabbr, startChap, startVerse, endChap, endVerse)
         return ' '.join([verseTuple[3] for verseTuple in versesIterator])
+
+    def chapIterator(self, books):
+        for bookabbr in books:
+            for chapIdx in range(1, self.getNumChapters(bookabbr)+1):
+                yield (bookabbr, chapIdx)
+
+    def otChapters(self):
+        return self.chapIterator(abbr.otbookdict.keys())
+
+    def ntChapters(self):
+        return self.chapIterator(abbr.ntbookdict.keys())
+
+
