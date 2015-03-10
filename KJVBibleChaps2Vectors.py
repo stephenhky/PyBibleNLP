@@ -28,7 +28,7 @@ if __name__ == '__main__':
     vectorizer = DocVectorization.DocVectorizer(args.word2vec_model)
 
     for bookabbr in BookAbbrDict.otbookdict.keys() + BookAbbrDict.ntbookdict.keys():
-        for chapIdx in range(parser.getNumChapters(bookabbr)):
+        for chapIdx in range(1, parser.getNumChapters(bookabbr)+1):
             keystr = bookabbr+'_'+str(chapIdx)
             print 'Calculating '+ BookAbbrDict.getBookName(bookabbr) + ' ' + str(chapIdx) + ' (' + keystr + ')'
 
