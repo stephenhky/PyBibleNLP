@@ -4,6 +4,14 @@ from Bible.BibleExceptions import BibleException
 import numpy as np
 from scipy.spatial.distance import cosine
 
+# term-frequency functions
+unaryTF = lambda f: 1 if f>0 else 0
+rawTF = lambda f: f
+
+# inverse-document-frequency functions
+unaryIDF = lambda N, n: 1
+invfreqIDF = lambda N, n: np.log(N/(1.+n))
+
 class TokenNotFoundException(BibleException):
     def __init__(self, token):
         self._message = 'Token ['+token+'] not found.'
@@ -25,16 +33,19 @@ class LatentSemanticIndexing:
             vec[idx] = 1
             self.tokenVecs[token] = vec
 
-    def runLSI(self, books, k=None):
+    def calculateTermDocumentMatrix(self, books):
         veclist = []
         self.books = books
-        self.k = k
         for book in self.books:
             tokens = np.load(self.npzdir+'/'+book+'.tkn')
             tokens = tokens['arr_0']
             vecs = map(lambda token: self.tokenVecs[token], tokens)
             veclist += [sum(vecs)]
         self.termdocMatrix = np.transpose(np.matrix(np.array(veclist)))
+
+    def runLSI(self, books, k=None):
+        self.k = k
+        self.calculateTermDocumentMatrix(books)
         self.U, self.s, self.V = np.linalg.svd(self.termdocMatrix, full_matrices=False)
         self.U = np.matrix(self.U)
         self.V = np.matrix(self.V)
@@ -61,7 +72,6 @@ class LatentSemanticIndexing:
         return cosines
 
 class LatentSemanticIndexingForContinuousVectors(LatentSemanticIndexing):
-
     def preloadTokens(self, books):
         self.tokenVecs = {}
         for book in books:
@@ -73,5 +83,14 @@ class LatentSemanticIndexingForContinuousVectors(LatentSemanticIndexing):
                 if not self.tokenVecs.has_key(token):
                     self.tokenVecs[token] = vec
 
+class LSIWordCountPreprocessing(LatentSemanticIndexing):
+    def __init__(self, npzdir='.', tf=rawTF, idf=invfreqIDF):
+        LatentSemanticIndexing.__init__(self, npzdir=npzdir)
+        self.tf = tf
+        self.idf = idf
 
-
+    def calculateTermDocumentMatrix(self, books):
+        LatentSemanticIndexing.calculateTermDocumentMatrix(self, books)
+        rawTermDocMatrix = self.termdocMatrix
+        docfreq = np.sum(rawTermDocMatrix!=0, axis=1)
+        self.termdocMatrix = np.array(self.tf(rawTermDocMatrix))*np.array(self.idf(rawTermDocMatrix.shape[1], docfreq))
