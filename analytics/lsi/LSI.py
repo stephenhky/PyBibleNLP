@@ -83,7 +83,7 @@ class LatentSemanticIndexingForContinuousVectors(LatentSemanticIndexing):
                 if not self.tokenVecs.has_key(token):
                     self.tokenVecs[token] = vec
 
-class LSIWordCountPreprocessing(LatentSemanticIndexing):
+class LSIWordCountTFIDF(LatentSemanticIndexing):
     def __init__(self, npzdir='.', tf=rawTF, idf=invfreqIDF):
         LatentSemanticIndexing.__init__(self, npzdir=npzdir)
         self.tf = tf
