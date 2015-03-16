@@ -4,21 +4,14 @@ from Bible.BibleExceptions import BibleException
 import numpy as np
 from scipy.spatial.distance import cosine
 
-# term-frequency functions
-unaryTF = lambda f: 1 if f>0 else 0
-rawTF = lambda f: f
-
-# inverse-document-frequency functions
-unaryIDF = lambda N, n: 1
-invfreqIDF = lambda N, n: np.log(N/(1.+n))
-
 class TokenNotFoundException(BibleException):
     def __init__(self, token):
         self._message = 'Token ['+token+'] not found.'
 
 class LatentSemanticIndexing:
-    def __init__(self, npzdir='.'):
+    def __init__(self, npzdir='.', stemfunc=lambda s: s):
         self.npzdir = npzdir
+        self.stemfunc = stemfunc
 
     def preloadTokens(self, books):
         self.tokenVecs = {}
@@ -26,8 +19,9 @@ class LatentSemanticIndexing:
             tokens = np.load(self.npzdir+'/'+book+'.tkn')
             tokens = tokens['arr_0']
             for token in tokens:
-                if not self.tokenVecs.has_key(token):
-                    self.tokenVecs[token] = None
+                stemmedToken = self.stemfunc(token)
+                if not self.tokenVecs.has_key(stemmedToken):
+                    self.tokenVecs[stemmedToken] = None
         for token, idx in zip(self.tokenVecs.keys(), range(len(self.tokenVecs))):
             vec = np.zeros(len(self.tokenVecs))
             vec[idx] = 1
@@ -39,7 +33,7 @@ class LatentSemanticIndexing:
         for book in self.books:
             tokens = np.load(self.npzdir+'/'+book+'.tkn')
             tokens = tokens['arr_0']
-            vecs = map(lambda token: self.tokenVecs[token], tokens)
+            vecs = map(lambda token: self.tokenVecs[self.stemfunc(token)], tokens)
             veclist += [sum(vecs)]
         self.termdocMatrix = np.transpose(np.matrix(np.array(veclist)))
 
@@ -60,7 +54,7 @@ class LatentSemanticIndexing:
 
     def reduceTokenRankVec(self, token):
         try:
-            vec = self.tokenVecs[token]
+            vec = self.tokenVecs[self.stemfunc(token)]
         except KeyError:
             raise TokenNotFoundException(token)
         return self.reduceRankVec(vec, toTranspose=False)
@@ -78,14 +72,25 @@ class LatentSemanticIndexingForContinuousVectors(LatentSemanticIndexing):
             vecs = np.load(self.npzdir+'/'+book+'.npz')
             vecs = vecs['arr_0']
             tokens = np.load(self.npzdir+'/'+book+'.tkn')
-            tokens = tokens['arr_0']
+            tokens = self.stemfunc(tokens['arr_0'])
             for token, vec in zip(tokens, vecs):
                 if not self.tokenVecs.has_key(token):
                     self.tokenVecs[token] = vec
 
+# term-frequency functions
+unaryTF = lambda f: 1 if f>0 else 0
+rawTF = lambda f: f
+lognormalTF = lambda f: 1+np.log(float(f))
+
+# inverse-document-frequency functions
+unaryIDF = lambda N, n: 1
+invfreqIDF = lambda N, n: np.log(N/(1.+n))
+invfreqsmoothIDF = lambda N, n: np.log(1.+N/float(n))
+probinvfreqIDF = lambda N, n: np.log((N-n)/float(n))
+
 class LSIWordCountTFIDF(LatentSemanticIndexing):
-    def __init__(self, npzdir='.', tf=rawTF, idf=invfreqIDF):
-        LatentSemanticIndexing.__init__(self, npzdir=npzdir)
+    def __init__(self, npzdir='.', stemfunc=lambda s: s, tf=rawTF, idf=invfreqIDF):
+        LatentSemanticIndexing.__init__(self, npzdir=npzdir, stemfunc=stemfunc)
         self.tf = tf
         self.idf = idf
 
