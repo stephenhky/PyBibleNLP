@@ -72,10 +72,11 @@ class LatentSemanticIndexingForContinuousVectors(LatentSemanticIndexing):
             vecs = np.load(self.npzdir+'/'+book+'.npz')
             vecs = vecs['arr_0']
             tokens = np.load(self.npzdir+'/'+book+'.tkn')
-            tokens = self.stemfunc(tokens['arr_0'])
+            tokens = tokens['arr_0']
             for token, vec in zip(tokens, vecs):
-                if not self.tokenVecs.has_key(token):
-                    self.tokenVecs[token] = vec
+                normalizedToken = self.stemfunc(token)
+                if not self.tokenVecs.has_key(normalizedToken):
+                    self.tokenVecs[normalizedToken] = vec
 
 # term-frequency functions
 unaryTF = lambda f: 1 if f>0 else 0
