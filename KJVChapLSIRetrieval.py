@@ -60,11 +60,14 @@ def promptflow(indexer, numChap):
     while True:
         topicword = raw_input('topic> ')
         if topicword!='':
-            retrievedChapters = indexer.queryDocs(topicword)
-            for bookchapter, cosine in retrievedChapters[:min(numChap, len(retrievedChapters))]:
-                book, chapidx = bookchapter.split('_')
-                chapidx = int(chapidx)
-                print abbr.getBookName(book)+', Chapter '+str(chapidx)+' : '+str(cosine)
+            try:
+                retrievedChapters = indexer.queryDocs(topicword)
+                for bookchapter, cosine in retrievedChapters[:min(numChap, len(retrievedChapters))]:
+                    book, chapidx = bookchapter.split('_')
+                    chapidx = int(chapidx)
+                    print abbr.getBookName(book)+', Chapter '+str(chapidx)+' : '+str(cosine)
+            except lsi.TokenNotFoundException:
+                print 'Topic word ['+topicword+'] not found!'
         else:
             break
 
