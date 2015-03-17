@@ -65,6 +65,13 @@ class LatentSemanticIndexing:
         cosines = sorted(cosines, key=lambda item: item[1], reverse=True)
         return cosines
 
+    def topicVectorsIterator(self):
+        for i in range(self.k):
+            vecstr = ''
+            for j, token in zip(range(self.U.shape[0]), self.tokenVecs.keys()):
+                vecstr += ('+' if self.U[j,i]>0 else '')+str(self.U[j,i])+'*'+token
+            yield (self.s[i], vecstr)
+
 class LatentSemanticIndexingForContinuousVectors(LatentSemanticIndexing):
     def preloadTokens(self, books):
         self.tokenVecs = {}
