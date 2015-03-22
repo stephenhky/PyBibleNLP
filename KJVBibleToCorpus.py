@@ -3,7 +3,7 @@ __author__ = 'hok1'
 import argparse
 import time
 import pickle
-from Bible.KJV import KJVBibleParser
+import Bible.KJV.KJVBibleParser as kbp
 from vectorize import DocVectorization
 from Bible import BookAbbrDict as abbr
 from gensim import corpora
@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     print 'Initializing....'
     vectorizer = DocVectorization.DocVectorizer()
-    parser = KJVBibleParser(args.kjv_dir)
+    parser = kbp.KJVParser(args.kjv_dir)
 
     starttime = time.time()
 
