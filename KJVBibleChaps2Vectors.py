@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
             print '  Retrieving vectors...'
             booktext = parser.retrieveVerses(bookabbr, chapIdx, 1, chapIdx, parser.getNumVerses(bookabbr, chapIdx))
-            tokens, vectors = vectorizer.retrieveDocVectors(booktext)
+            tokens, vectors = vectorizer.retrieveWord2VecDocVectors(booktext)
 
             print '  Writing to files...'
             outputtokenfile = open(args.output_dir+'/'+keystr+'.tkn', 'wb')
