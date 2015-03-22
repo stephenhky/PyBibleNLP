@@ -8,7 +8,7 @@ class TokenNotFoundException(BibleException):
     def __init__(self, token):
         self._message = 'Token ['+token+'] not found.'
 
-class LatentSemanticIndexing:
+class LatentSemanticIndexingKJVTokens:
     def __init__(self, npzdir='.', stemfunc=lambda s: s):
         self.npzdir = npzdir
         self.stemfunc = stemfunc
@@ -72,7 +72,7 @@ class LatentSemanticIndexing:
                 vecstr += ('+' if self.U[j,i]>0 else '')+str(self.U[j,i])+'*'+token
             yield (self.s[i], vecstr)
 
-class LatentSemanticIndexingForContinuousVectors(LatentSemanticIndexing):
+class LatentSemanticIndexingKJVTokensForContinuousVectors(LatentSemanticIndexingKJVTokens):
     def preloadTokens(self, books):
         self.tokenVecs = {}
         for book in books:
@@ -96,14 +96,14 @@ invfreqIDF = lambda N, n: np.log(N/(1.+n))
 invfreqsmoothIDF = lambda N, n: np.log(1.+N/float(n))
 probinvfreqIDF = lambda N, n: np.log((N-n)/float(n))
 
-class LSIWordCountTFIDF(LatentSemanticIndexing):
+class LSIWordCountTFIDFKJVTokens(LatentSemanticIndexingKJVTokens):
     def __init__(self, npzdir='.', stemfunc=lambda s: s, tf=rawTF, idf=invfreqIDF):
-        LatentSemanticIndexing.__init__(self, npzdir=npzdir, stemfunc=stemfunc)
+        LatentSemanticIndexingKJVTokens.__init__(self, npzdir=npzdir, stemfunc=stemfunc)
         self.tf = tf
         self.idf = idf
 
     def calculateTermDocumentMatrix(self, books):
-        LatentSemanticIndexing.calculateTermDocumentMatrix(self, books)
+        LatentSemanticIndexingKJVTokens.calculateTermDocumentMatrix(self, books)
         rawTermDocMatrix = self.termdocMatrix
         docfreq = np.sum(rawTermDocMatrix!=0, axis=1)
         self.termdocMatrix = np.array(self.tf(rawTermDocMatrix))*np.array(self.idf(rawTermDocMatrix.shape[1], docfreq))

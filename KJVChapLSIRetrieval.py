@@ -49,7 +49,7 @@ def getLSIAnalyzer(args):
         )
     else:
         raise NoStemmerException()
-    indexer = lsi.LSIWordCountTFIDF(npzdir=args.npzdir, stemfunc=stemfunc,
+    indexer = lsi.LSIWordCountTFIDFKJVTokens(npzdir=args.npzdir, stemfunc=stemfunc,
                                     tf=TFdict[args.tf], idf=IDFdict[args.idf])
     chapkeys = getChapKeys(args.kjvdir)
     indexer.preloadTokens(chapkeys)
