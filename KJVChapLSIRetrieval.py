@@ -2,20 +2,13 @@ __author__ = 'hok1'
 
 import Bible.BookAbbrDict as abbr
 import Bible.KJV.KJVBibleParser as kbp
-from Bible.BibleExceptions import BibleException
 import analytics.lsi.LSI as lsi
 import argparse
-from nltk.stem.porter import PorterStemmer
-from nltk.stem.lancaster import LancasterStemmer
-from nltk.stem.wordnet import WordNetLemmatizer
+import analytics.stem.stemfuncs as stemfuncs
 
 TFdict = {'rawTF': lsi.rawTF, 'unaryTF': lsi.unaryTF, 'lognormalTF': lsi.lognormalTF}
 IDFdict = {'unaryIDF': lsi.unaryIDF, 'invfreqIDF': lsi.invfreqIDF, 'invfreqsmoothIDF': lsi.invfreqsmoothIDF,
            'probinvfreqIDF': lsi.probinvfreqIDF}
-
-class NoStemmerException(BibleException):
-    def __init__(self):
-        self._message = 'No such stemmer!'
 
 def getArgvParser():
     argvParser = argparse.ArgumentParser(description='Perform retrieval on chapters in KJV Bible with latent semantic indexing (LSI)')
@@ -34,21 +27,7 @@ def getChapKeys(kjv_dir):
     return chapKeys
 
 def getLSIAnalyzer(args):
-    if args.stemmer=='':
-        stemfunc = lambda s: s
-    elif args.stemmer=='porter':
-        porterStemmer = PorterStemmer()
-        stemfunc = lambda s: porterStemmer.stem(s)
-    elif args.stemmer=='lancaster':
-        lancasterStemmer = LancasterStemmer()
-        stemfunc = lambda s: lancasterStemmer.stem(s)
-    elif args.stemmer=='wordnetLemmatizer':
-        lemmatizer = WordNetLemmatizer()
-        stemfunc = lambda s: str(min(lemmatizer.lemmatize(s, 'v'), lemmatizer.lemmatize(s, 'n'),
-                                     key=lambda st: len(st))
-        )
-    else:
-        raise NoStemmerException()
+    stemfunc = stemfuncs.getstemfunc(args.stemmer)
     indexer = lsi.LSIWordCountTFIDFKJVTokens(npzdir=args.npzdir, stemfunc=stemfunc,
                                     tf=TFdict[args.tf], idf=IDFdict[args.idf])
     chapkeys = getChapKeys(args.kjvdir)
