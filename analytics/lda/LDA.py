@@ -5,10 +5,11 @@ from gensim.models.ldamodel import LdaModel
 from gensim import corpora
 
 class LatentDirichletAllocation:
-    def __init__(self, num_topics=50, corpus=None, dictionary=None):
+    def __init__(self, num_topics=50, corpus=None, dictionary=None, stemfunc=lambda s: s):
         self.num_topics = num_topics
         self.corpus = corpus
         self.dictionary = dictionary
+        self.stemfunc = stemfunc
 
     def loadCorpus(self, mmfile, dictfile):
         self.corpus = corpora.MmCorpus(mmfile)
