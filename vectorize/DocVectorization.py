@@ -41,8 +41,9 @@ class DocVectorizer:
         vectors = np.array(map(lambda pair: pair[1], filteredPairs))
         return tokens, vectors
 
-    def retrieveGensimCorpora(self, docs):
+    def retrieveGensimCorpora(self, docs, stemfunc=lambda s: s):
         texts = map(self.tokenizeDoc, docs)
+        texts = map(lambda text: map(stemfunc, text), texts)
         dictionary = corpora.Dictionary(texts)
         corpus = [dictionary.doc2bow(text) for text in texts]
         return dictionary, corpus

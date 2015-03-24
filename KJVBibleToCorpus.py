@@ -7,11 +7,13 @@ import Bible.KJV.KJVBibleParser as kbp
 from vectorize import DocVectorization
 from Bible import BookAbbrDict as abbr
 from gensim import corpora
+import analytics.stem.stemfuncs as stemfuncs
 
 def argument_parser():
     argv_parser = argparse.ArgumentParser(description='Parsing the KJV chapters into gensim corpus')
     argv_parser.add_argument('kjv_dir', help='directory of the KJV Books')
     argv_parser.add_argument('output_dir', help='output directory')
+    argv_parser.add_argument('--stemmer', help='stemmer', default='')
     return argv_parser
 
 if __name__ == '__main__':
@@ -29,7 +31,7 @@ if __name__ == '__main__':
     print 'Parsing the Bible...'
     documents = [parser.retrieveVerses(book, chapidx, 1, chapidx, parser.getNumVerses(book, chapidx)) for book, chapidx in parser.chapIterator(abbr.otbookdict.keys()+abbr.ntbookdict.keys())]
     print 'Building gensim corpus'
-    dictionary, corpus = vectorizer.retrieveGensimCorpora(documents)
+    dictionary, corpus = vectorizer.retrieveGensimCorpora(documents, stemfunc=stemfuncs.getstemfunc(args.stemmer))
 
     endtime = time.time()
     print 'Finished.'
