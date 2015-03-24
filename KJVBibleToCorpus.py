@@ -37,4 +37,6 @@ if __name__ == '__main__':
 
     dictionary.save(args.output_dir+'/kjvdictionary.dict')
     corpora.MmCorpus.serialize(args.output_dir+'/kjvcorpus.mm', corpus)
-    pickle.dump(chaptuples, args.output_dir+'/chaptuples.pickle')
+    chaptuplepickle = open(args.output_dir+'/chaptuples.pickle', 'wb')
+    pickle.dump(chaptuples, chaptuplepickle)
+    chaptuplepickle.close()
