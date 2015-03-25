@@ -1,6 +1,5 @@
 __author__ = 'hok1'
 
-import numpy as np
 from gensim.models.ldamodel import LdaModel
 from gensim import corpora
 import vectorize.DocVectorization as dv
