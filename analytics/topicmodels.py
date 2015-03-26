@@ -22,7 +22,8 @@ class TopicModeler:
         self.corpus = corpora.MmCorpus(mmfile)
         self.dictionary = corpora.Dictionary.load(dictfile)
         if doctuplesfile!=None:
-            self.doctuples = pickle.load(open(doctuplesfile, 'rb'))
+            with open(doctuplesfile, 'rb') as docpicklef:
+                self.doctuples = pickle.load(docpicklef)
         if self.toweight:
             self.tfidf = TfidfModel(self.corpus)
 
