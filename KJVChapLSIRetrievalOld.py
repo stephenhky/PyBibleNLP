@@ -1,9 +1,7 @@
-from Bible.BibleExceptions import TokenNotFoundException
-
 __author__ = 'hok1'
 
+from Bible.BibleExceptions import TokenNotFoundException
 import argparse
-
 import Bible.BookAbbrDict as abbr
 import Bible.KJV.KJVBibleParser as kbp
 import analytics.lsi.old.LSI as lsi
