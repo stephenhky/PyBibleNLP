@@ -1,16 +1,14 @@
 __author__ = 'stephenhky'
 
-from gensim import corpora
-import vectorize.DocVectorization as dv
+from gensim.models import LsiModel
+from analytics.topicmodels import TopicModeler
 
-class LatentSemanticIndexing:
-    def __init__(self, num_topics=50, corpus=None, dictionary=None, stemfunc=lambda s: s):
-        self.num_topics = num_topics
-        self.corpus = corpus
-        self.dictionary = dictionary
-        self.stemfunc = stemfunc
-        self.vectorizer = dv.DocVectorizer()
+class LatentSemanticIndexing(TopicModeler):
+    def trainModel(self):
+        if self.toweight:
+            self.model = LsiModel(self.tfidf[self.corpus], num_topics=self.num_topics)
+        else:
+            self.model = LsiModel(self.corpus, num_topics=self.num_topics)
 
-    def loadCorpus(self, mmfile, dictfile):
-        self.corpus = corpora.MmCorpus(mmfile)
-        self.dictionary = corpora.Dictionary.load(dictfile)
+    def queryDocs(self, queryToken):
+        pass
