@@ -11,5 +11,8 @@ class LatentDirichletAllocation(TopicModeler):
             self.model = LdaModel(self.corpus, num_topics=self.num_topics)
 
     def queryDocTopics(self, docstr):
-        return self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(docstr))]
+        if self.toweight:
+            return self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(docstr))]]
+        else:
+            return self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(docstr))]
 

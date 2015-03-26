@@ -3,20 +3,24 @@ __author__ = 'hok1'
 from gensim import corpora
 from gensim.models.tfidfmodel import TfidfModel
 import vectorize.DocVectorization as dv
+import pickle
 
 # abstract class
 class TopicModeler:
-    def __init__(self, num_topics=50, corpus=None, dictionary=None, stemfunc=lambda s: s, toweight=True):
+    def __init__(self, num_topics=50, corpus=None, dictionary=None, doctuples=None, stemfunc=lambda s: s, toweight=True):
         self.num_topics = num_topics
         self.corpus = corpus
         self.dictionary = dictionary
+        self.doctuples = doctuples
         self.stemfunc = stemfunc
         self.vectorizer = dv.DocVectorizer()
         self.toweight = toweight
 
-    def loadCorpus(self, mmfile, dictfile):
+    def loadCorpus(self, mmfile, dictfile, doctuplesfile=None):
         self.corpus = corpora.MmCorpus(mmfile)
         self.dictionary = corpora.Dictionary.load(dictfile)
+        if doctuplesfile!=None:
+            self.doctuples = pickle.load(open(doctuplesfile, 'rb'))
         if self.toweight:
             self.tfidf = TfidfModel(self.corpus)
 
