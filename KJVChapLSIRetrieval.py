@@ -1,10 +1,14 @@
+from Bible.BibleExceptions import TokenNotFoundException
+
 __author__ = 'hok1'
+
+import argparse
 
 import Bible.BookAbbrDict as abbr
 import Bible.KJV.KJVBibleParser as kbp
-import analytics.lsi.LSI as lsi
-import argparse
+import analytics.lsi.old.LSI as lsi
 import analytics.stem.stemfuncs as stemfuncs
+
 
 TFdict = {'rawTF': lsi.rawTF, 'unaryTF': lsi.unaryTF, 'lognormalTF': lsi.lognormalTF}
 IDFdict = {'unaryIDF': lsi.unaryIDF, 'invfreqIDF': lsi.invfreqIDF, 'invfreqsmoothIDF': lsi.invfreqsmoothIDF,
@@ -45,7 +49,7 @@ def promptflow(indexer, numChap):
                     book, chapidx = bookchapter.split('_')
                     chapidx = int(chapidx)
                     print abbr.getBookName(book)+', Chapter '+str(chapidx)+' : '+str(cosine)
-            except lsi.TokenNotFoundException:
+            except TokenNotFoundException:
                 print 'Topic word ['+topicword+'] not found!'
         else:
             break

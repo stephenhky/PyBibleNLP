@@ -21,3 +21,7 @@ class InvalidBibleLocationException(BibleException):
 class InvalidBibleChapterException(BibleException):
     def __init__(self, bookabbr, chap):
         self._message = 'The book '+bookabbr+' does not have chapter '+str(chap)
+
+class TokenNotFoundException(BibleException):
+    def __init__(self, token):
+        self._message = 'Token ['+token+'] not found.'
