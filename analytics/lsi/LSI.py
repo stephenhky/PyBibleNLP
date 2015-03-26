@@ -13,12 +13,4 @@ class LatentSemanticIndexing(TopicModeler):
             self.model = LsiModel(self.corpus, num_topics=self.num_topics)
             self.index = similarities.MatrixSimilarity(self.model[self.corpus])
 
-    def queryDocs(self, queryToken):
-        if self.toweight:
-            reducedvec = self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(queryToken))]]
-        else:
-            reducedvec = self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(queryToken))]
-        sims = self.index[reducedvec]
-        simtuples = zip(range(len(sims)), sims) if self.doctuples==None else zip(self.doctuples, sims)
-        simtuples = sorted(simtuples, key=lambda item: item[1], reverse=True)
-        return simtuples
+

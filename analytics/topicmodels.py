@@ -34,3 +34,14 @@ class TopicModeler:
     # need to implement
     def trainModel(self):
         self.model = None
+        self.index = None
+
+    def queryDocs(self, queryToken):
+        if self.toweight:
+            reducedvec = self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(queryToken))]]
+        else:
+            reducedvec = self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(queryToken))]
+        sims = self.index[reducedvec]
+        simtuples = zip(range(len(sims)), sims) if self.doctuples==None else zip(self.doctuples, sims)
+        simtuples = sorted(simtuples, key=lambda item: item[1], reverse=True)
+        return simtuples
