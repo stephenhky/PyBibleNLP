@@ -18,3 +18,6 @@ class LatentDirichletAllocation(TopicModeler):
             return self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(docstr))]]
         else:
             return self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(docstr))]
+
+    def __str__(self):
+        return 'Latent Dirichlet Allocation (LDA)'

@@ -2,6 +2,7 @@ __author__ = 'hok1'
 
 from gensim import corpora
 from gensim.models.tfidfmodel import TfidfModel
+from Bible.BibleExceptions import TokenNotFoundException
 import vectorize.DocVectorization as dv
 import pickle
 
@@ -32,17 +33,23 @@ class TopicModeler:
     def numTopics(self):
         return self.model.num_topics
 
+    def queryDocs(self, queryToken):
+        stemmedToken = self.stemfunc(queryToken)
+        if not self.dictionary.token2id.has_key(stemmedToken):
+            raise TokenNotFoundException(queryToken)
+        if self.toweight:
+            reducedvec = self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(stemmedToken))]]
+        else:
+            reducedvec = self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(stemmedToken))]
+        sims = self.index[reducedvec]
+        simtuples = zip(range(len(sims)), sims) if self.doctuples==None else zip(self.doctuples, sims)
+        simtuples = sorted(simtuples, key=lambda item: item[1], reverse=True)
+        return simtuples
+
     # need to implement
     def trainModel(self):
         self.model = None
         self.index = None
 
-    def queryDocs(self, queryToken):
-        if self.toweight:
-            reducedvec = self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(self.stemfunc(queryToken)))]]
-        else:
-            reducedvec = self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(self.stemfunc(queryToken)))]
-        sims = self.index[reducedvec]
-        simtuples = zip(range(len(sims)), sims) if self.doctuples==None else zip(self.doctuples, sims)
-        simtuples = sorted(simtuples, key=lambda item: item[1], reverse=True)
-        return simtuples
+    def __str__(self):
+        return 'Topic Modeler (base class)'

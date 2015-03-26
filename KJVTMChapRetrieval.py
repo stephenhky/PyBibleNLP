@@ -31,6 +31,7 @@ def getAnalyzer(args):
         modeler = lda.LatentDirichletAllocation(num_topics=args.k, stemfunc=stemfunc, toweight=args.tfidf)
     else:
         raise BibleException('No such model: '+args.model)
+    print 'Preparing model: '+str(modeler)
     modeler.loadCorpus(args.mmcorpusfile, args.dictfile, args.chapkeysfile)
     modeler.trainModel()
     return modeler
