@@ -3,11 +3,13 @@ __author__ = 'hok1'
 import argparse
 import time
 import pickle
+
 import Bible.KJV.KJVBibleParser as kbp
 from vectorize import DocVectorization
 from Bible import BookAbbrDict as abbr
 from gensim import corpora
-import analytics.stem.stemfuncs as stemfuncs
+import analytics.stemfuncs as stemfuncs
+
 
 def argument_parser():
     argv_parser = argparse.ArgumentParser(description='Parsing the KJV chapters into gensim corpus')

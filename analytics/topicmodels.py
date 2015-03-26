@@ -7,7 +7,8 @@ import pickle
 
 # abstract class
 class TopicModeler:
-    def __init__(self, num_topics=50, corpus=None, dictionary=None, doctuples=None, stemfunc=lambda s: s, toweight=True):
+    def __init__(self, num_topics=50, corpus=None, dictionary=None, doctuples=None,
+                 stemfunc=lambda s: s, toweight=True):
         self.num_topics = num_topics
         self.corpus = corpus
         self.dictionary = dictionary
@@ -38,9 +39,9 @@ class TopicModeler:
 
     def queryDocs(self, queryToken):
         if self.toweight:
-            reducedvec = self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(queryToken))]]
+            reducedvec = self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(self.stemfunc(queryToken)))]]
         else:
-            reducedvec = self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(queryToken))]
+            reducedvec = self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(self.stemfunc(queryToken)))]
         sims = self.index[reducedvec]
         simtuples = zip(range(len(sims)), sims) if self.doctuples==None else zip(self.doctuples, sims)
         simtuples = sorted(simtuples, key=lambda item: item[1], reverse=True)

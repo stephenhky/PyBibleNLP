@@ -1,13 +1,12 @@
 __author__ = 'hok1'
 
-from Bible.BibleExceptions import TokenNotFoundException, BibleException
 import argparse
+import pickle
+from Bible.BibleExceptions import TokenNotFoundException, BibleException
 import Bible.BookAbbrDict as abbr
-import Bible.KJV.KJVBibleParser as kbp
+import analytics.stemfuncs as stemfuncs
 import analytics.lsi.LSI as lsi
 import analytics.lda.LDA as lda
-import analytics.stem.stemfuncs as stemfuncs
-import pickle
 
 def getArgvParser():
     argvParser = argparse.ArgumentParser(description='Perform retrieval on chapters in KJV Bible with latent semantic indexing (LSI)')

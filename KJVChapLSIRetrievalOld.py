@@ -1,11 +1,12 @@
 __author__ = 'hok1'
 
-from Bible.BibleExceptions import TokenNotFoundException
 import argparse
+
+from Bible.BibleExceptions import TokenNotFoundException
 import Bible.BookAbbrDict as abbr
 import Bible.KJV.KJVBibleParser as kbp
 import analytics.lsi.old.LSI as lsi
-import analytics.stem.stemfuncs as stemfuncs
+import analytics.stemfuncs as stemfuncs
 
 
 TFdict = {'rawTF': lsi.rawTF, 'unaryTF': lsi.unaryTF, 'lognormalTF': lsi.lognormalTF}
