@@ -2,7 +2,8 @@ __author__ = 'hok1'
 
 from gensim.models import word2vec
 from gensim import corpora
-import nltk
+from nltk.tokenize import TreebankWordTokenizer
+from nltk.corpus import stopwords
 import re
 import numpy as np
 
@@ -13,7 +14,7 @@ class DocVectorizer:
         self.toRemoveDigits = toRemoveDigits
         self.toLower = toLower
         self.toRemoveStopWords = toRemoveStopWords
-        self.tokenizer = nltk.tokenize.TreebankWordTokenizer()
+        self.tokenizer = TreebankWordTokenizer()
 
     def loadmodel(self, modelfilename, binary=True):
         self.wmodel = word2vec.Word2Vec.load_word2vec_format(modelfilename, binary=binary)
@@ -30,7 +31,7 @@ class DocVectorizer:
         if self.toLower:
             tokenizedDoc = map(lambda s: s.lower(), tokenizedDoc)
         if self.toRemoveStopWords:
-            tokenizedDoc = filter(lambda s: not (s.lower() in nltk.corpus.stopwords.words()), tokenizedDoc)
+            tokenizedDoc = filter(lambda s: not (s.lower() in stopwords.words()), tokenizedDoc)
         return tokenizedDoc
 
     def retrieveWord2VecDocVectors(self, docstr):
