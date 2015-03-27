@@ -15,7 +15,7 @@ def getArgvParser():
     argvParser.add_argument('chapkeysfile', help='file that store the list of bible chapters')
     argvParser.add_argument('model', help='model (LDA or LSI)')
     argvParser.add_argument('--stemmer', help='stemmer', default='')
-    argvParser.add_argument('--tfidf', help='implement tf-idf weighting', type=bool, default=True)
+    argvParser.add_argument('--tfidf', help='implement tf-idf weighting', action='store_false', default=False)
     argvParser.add_argument('--k', help='number of topics', type=int, default=50)
     argvParser.add_argument('--numChap', help='number of chapters to displayed in each retrieval', type=int, default=10)
     return argvParser
