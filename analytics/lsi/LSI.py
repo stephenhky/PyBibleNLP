@@ -13,6 +13,14 @@ class LatentSemanticIndexing(TopicModeler):
             self.model = LsiModel(self.corpus, num_topics=self.num_topics)
             self.index = similarities.MatrixSimilarity(self.model[self.corpus])
 
+    def loadModel(self, modelfile):
+        self.model = LsiModel.load(modelfile)
+        if self.toweight:
+            self.index = similarities.MatrixSimilarity(self.model[self.tfidf[self.corpus]])
+        else:
+            self.index = similarities.MatrixSimilarity(self.model[self.corpus])
+
+
     def __str__(self):
         return 'Latent Semantic Indexing (LSI)'
 

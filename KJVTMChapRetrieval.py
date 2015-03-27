@@ -18,6 +18,7 @@ def getArgvParser():
     argvParser.add_argument('--tfidf', help='implement tf-idf weighting', action='store_false', default=False)
     argvParser.add_argument('--k', help='number of topics', type=int, default=50)
     argvParser.add_argument('--numChap', help='number of chapters to displayed in each retrieval', type=int, default=10)
+    argvParser.add_argument('--modelfile', help='pre-trained model (consistent with other parameters)', default=None)
     return argvParser
 
 def getChapKeys(chapkeysfile):
@@ -33,7 +34,13 @@ def getAnalyzer(args):
         raise BibleException('No such model: '+args.model)
     print 'Preparing model: '+str(modeler)
     modeler.loadCorpus(args.mmcorpusfile, args.dictfile, args.chapkeysfile)
-    modeler.trainModel()
+    try:
+        if args.modelfile==None:
+            modeler.trainModel()
+        else:
+            modeler.loadModel(args.modelfile)
+    except AttributeError:
+        modeler.trainModel()
     return modeler
 
 def promptflow(modeler, numChap):

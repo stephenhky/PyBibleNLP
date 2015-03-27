@@ -13,6 +13,13 @@ class LatentDirichletAllocation(TopicModeler):
             self.model = LdaModel(self.corpus, num_topics=self.num_topics)
             self.index = similarities.MatrixSimilarity(self.model[self.corpus])
 
+    def loadModel(self, modelfile):
+        self.model = LdaModel.load(modelfile)
+        if self.toweight:
+            self.index = similarities.MatrixSimilarity(self.model[self.tfidf[self.corpus]])
+        else:
+            self.index = similarities.MatrixSimilarity(self.model[self.corpus])
+
     def queryDocTopics(self, docstr):
         if self.toweight:
             return self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(docstr))]]

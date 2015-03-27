@@ -52,5 +52,10 @@ class TopicModeler:
         self.model = None
         self.index = None
 
+    # need to implement
+    def loadModel(self):
+        self.model = None
+        self.index = None
+
     def __str__(self):
         return 'Topic Modeler (base class)'
