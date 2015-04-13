@@ -1,5 +1,3 @@
-from Bible.BibleParser import BibleParser
-
 __author__ = 'hok1'
 
 from collections import defaultdict
@@ -7,6 +5,7 @@ import re
 
 from Bible import BookAbbrDict as abbr
 from Bible.BibleExceptions import NoBibleBookException
+from Bible.BibleParser import BibleParser
 
 bknameref = {
     "Genesis": "gen",
