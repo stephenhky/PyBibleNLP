@@ -12,7 +12,7 @@ class ESVOnlineParser:
 
     def query(self, bookabbr, chapidx):
         bookname = abbr.getBookName(bookabbr)
-        query_args = {'key': self.key, 'passage': bookname+' '+str(chapidx)}
+        query_args = {'key': self.key, 'passage': bookname+' '+str(chapidx), 'output-format': 'crossway-xml-1.0'}
         query_url = baseurl+'passageQuery?'+urllib.urlencode(query_args)
         return urllib2.urlopen(query_url)
 

@@ -24,4 +24,4 @@ if __name__ == '__main__':
         print 'Retrieving '+abbr.getBookName(bookabbr)+' '+str(chapidx)
         response = parser.query(bookabbr, chapidx)
         print '\tWriting...'
-        parser.save_url(output_dir+'/'+bookabbr+'_'+str(chapidx)+'.html', response)
+        parser.save_url(output_dir+'/'+bookabbr+'_'+str(chapidx)+'.xml', response)
