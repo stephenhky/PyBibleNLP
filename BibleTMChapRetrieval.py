@@ -9,15 +9,15 @@ import analytics.lsi.LSI as lsi
 import analytics.lda.LDA as lda
 
 def getArgvParser():
-    argvParser = argparse.ArgumentParser(description='Perform retrieval on chapters in KJV Bible with latent semantic indexing (LSI)')
+    argvParser = argparse.ArgumentParser(description='Perform retrieval on chapters in Bible with LSI or LDA')
     argvParser.add_argument('mmcorpusfile', help='path of the MM corpus')
     argvParser.add_argument('dictfile', help='path of the dictionary')
     argvParser.add_argument('chapkeysfile', help='file that store the list of bible chapters')
     argvParser.add_argument('model', help='model (LDA or LSI)')
-    argvParser.add_argument('--stemmer', help='stemmer', default='')
-    argvParser.add_argument('--tfidf', help='implement tf-idf weighting', action='store_false', default=False)
-    argvParser.add_argument('--k', help='number of topics', type=int, default=50)
-    argvParser.add_argument('--numChap', help='number of chapters to displayed in each retrieval', type=int, default=10)
+    argvParser.add_argument('--stemmer', help='stemmer (default: none)', default='')
+    argvParser.add_argument('--tfidf', help='implement tf-idf weighting (default: False)', action='store_false', default=False)
+    argvParser.add_argument('--k', help='number of topics (default: 50)', type=int, default=50)
+    argvParser.add_argument('--numChap', help='number of chapters to displayed in each retrieval (default: 10)', type=int, default=10)
     argvParser.add_argument('--modelfile', help='pre-trained model (consistent with other parameters)', default=None)
     return argvParser
 

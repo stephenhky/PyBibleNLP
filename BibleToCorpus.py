@@ -5,17 +5,19 @@ import time
 import pickle
 
 import Bible.KJV.KJVBibleParser as kbp
+import Bible.ESV.ESVBibleParser as ebp
 from vectorize import DocVectorization
 from Bible import BookAbbrDict as abbr
 from gensim import corpora
 import analytics.stemfuncs as stemfuncs
 
-
 def argument_parser():
-    argv_parser = argparse.ArgumentParser(description='Parsing the KJV chapters into gensim corpus')
-    argv_parser.add_argument('kjv_dir', help='directory of the KJV Books')
+    argv_parser = argparse.ArgumentParser(description='Parsing the bible (KJV/ESV) chapters into gensim corpus')
+    argv_parser.add_argument('text_dir', help='directory of the books')
     argv_parser.add_argument('output_dir', help='output directory')
-    argv_parser.add_argument('--stemmer', help='stemmer', default='')
+    argv_parser.add_argument('chaptuples', help='path of chaptuples pickle file')
+    argv_parser.add_argument('translation', help='translation (KJV/ESV)')
+    argv_parser.add_argument('--stemmer', help='stemmer (porter/stemmer/wordnetLemmatizer)', default='')
     return argv_parser
 
 if __name__ == '__main__':
@@ -24,12 +26,14 @@ if __name__ == '__main__':
 
     print 'Initializing....'
     vectorizer = DocVectorization.DocVectorizer()
-    parser = kbp.KJVParser(args.kjv_dir)
+    chaptuples = pickle.load(open(args.chaptuples, 'rb'))
+    if args.translation.lower() == 'kjv':
+        parser = kbp.KJVParser(args.text_dir, chaptuples=chaptuples)
+    elif args.translation.lower() == 'esv':
+        parser = ebp.ESVParser(args.text_dir, chaptuples=chaptuples)
 
     starttime = time.time()
 
-    print 'Retrieving chapters...'
-    chaptuples = [(book, chapidx) for book, chapidx in parser.chapIterator(abbr.otbookdict.keys()+abbr.ntbookdict.keys())]
     print 'Parsing the Bible...'
     documents = [parser.retrieveVerses(book, chapidx, 1, chapidx, parser.getNumVerses(book, chapidx)) for book, chapidx in parser.chapIterator(abbr.otbookdict.keys()+abbr.ntbookdict.keys())]
     print 'Building gensim corpus'
@@ -39,8 +43,5 @@ if __name__ == '__main__':
     print 'Finished.'
     print 'Time elapsed = ', (endtime-starttime), ' sec'
 
-    dictionary.save(args.output_dir+'/kjvdictionary.dict')
-    corpora.MmCorpus.serialize(args.output_dir+'/kjvcorpus.mm', corpus)
-    chaptuplepickle = open(args.output_dir+'/chaptuples.pickle', 'wb')
-    pickle.dump(chaptuples, chaptuplepickle)
-    chaptuplepickle.close()
+    dictionary.save(args.output_dir+'/'+args.translation.lower()+'dictionary.dict')
+    corpora.MmCorpus.serialize(args.output_dir+'/'+args.translation.lower()+'corpus.mm', corpus)

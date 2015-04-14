@@ -1,7 +1,7 @@
 __author__ = 'hok1'
 
 import argparse
-import KJVTMChapRetrieval as retrieval
+import BibleTMChapRetrieval as retrieval
 
 def getArgvParser():
     argvParser = argparse.ArgumentParser(description='Perform retrieval on chapters in KJV Bible with latent semantic indexing (LSI)')
