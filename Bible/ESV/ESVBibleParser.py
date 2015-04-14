@@ -2,6 +2,7 @@ __author__ = 'hok1'
 
 from collections import defaultdict
 from xml.dom.minidom import parse
+import re
 
 from Bible import BookAbbrDict as abbr
 from Bible.BibleParser import BibleParser
@@ -32,6 +33,8 @@ class ESVParser(BibleParser):
                     if nodename == 'verse-num':
                         versenum = int(item.childNodes[posid].firstChild.nodeValue)
                     if nodename == '#text':
-                        versetext += item.childNodes[posid].nodeValue.strip()
+                        versetext += ' '+item.childNodes[posid].nodeValue.strip()
+                    if nodename == 'woc':
+                        versetext += ' '+item.childNodes[posid].firstChild.nodeValue.strip()
                 if versenum > 0:
-                    self.bookcontent[chap][versenum] = versetext
+                    self.bookcontent[chap][versenum] = re.sub('\\s+', ' ', versetext)
