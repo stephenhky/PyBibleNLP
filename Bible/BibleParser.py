@@ -53,7 +53,11 @@ class BibleParser:
             numVerses = self.getNumVerses(bookabbr, chap)
             endingVerse = endVerse if chap==endChap and numVerses>=endVerse else numVerses
             for verse in range(startingVerse, endingVerse+1):
-                yield (bookabbr, chap, verse, self.retrieveVerse(bookabbr, chap, verse))
+                try:
+                    text = self.retrieveVerse(bookabbr, chap, verse)
+                except InvalidBibleLocationException:
+                    text = ''
+                yield (bookabbr, chap, verse, text)
 
     def retrieveVerses(self, bookabbr, startChap, startVerse, endChap, endVerse):
         versesIterator = self.retrieveVersesIterator(bookabbr, startChap, startVerse, endChap, endVerse)
