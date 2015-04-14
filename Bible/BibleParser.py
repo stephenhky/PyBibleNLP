@@ -4,10 +4,11 @@ from Bible import BookAbbrDict as abbr
 from Bible.BibleExceptions import BibleException, InvalidBibleChapterException, InvalidBibleLocationException
 
 class BibleParser:
-    def __init__(self, bookdir):
+    def __init__(self, bookdir, chaptuples=None):
         self.bookdir = bookdir
         self.currentbook = None
         self.bookcontent = {}
+        self.chaptuples = chaptuples
 
     # needs to be implemented
     def parseBook(self, bookabbr):
