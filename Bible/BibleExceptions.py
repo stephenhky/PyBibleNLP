@@ -25,3 +25,7 @@ class InvalidBibleChapterException(BibleException):
 class TokenNotFoundException(BibleException):
     def __init__(self, token):
         self._message = 'Token ['+token+'] not found.'
+
+class NoBibleTranslationException(BibleException):
+    def __init__(self, transver):
+        self._message = 'No such translation ('+transver+') supported.'
