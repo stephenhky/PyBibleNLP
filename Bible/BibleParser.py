@@ -4,11 +4,8 @@ from Bible import BookAbbrDict as abbr
 from Bible.BibleExceptions import BibleException, InvalidBibleChapterException, InvalidBibleLocationException
 
 class BibleParser:
-    def __init__(self, bookdir, chaptuples=None):
-        self.bookdir = bookdir
+    def __init__(self):
         self.currentbook = None
-        self.bookcontent = {}
-        self.chaptuples = chaptuples
 
     # needs to be implemented
     def parseBook(self, bookabbr):
@@ -39,8 +36,6 @@ class BibleParser:
         # validation
         if startChap > endChap or (startChap==endChap and startVerse>endVerse):
             raise BibleException('Wrong chapter sequence: '+str(startChap)+'>'+str(endChap))
-        if bookabbr != self.currentbook:
-            self.parseBook(bookabbr)
         numChaps = self.getNumChapters(bookabbr)
         if startChap > numChaps:
             raise InvalidBibleChapterException(bookabbr, startChap)

@@ -9,6 +9,11 @@ from Bible.BibleParser import BibleParser
 from Bible.BibleExceptions import NoBibleBookException, BibleException
 
 class ESVParser(BibleParser):
+    def __init__(self, bookdir, chaptuples=None):
+        BibleParser.__init__(self)
+        self.bookdir = bookdir
+        self.bookcontent = {}
+        self.chaptuples = chaptuples
 
     def parseBook(self, bookabbr):
         if self.chaptuples == None:
@@ -38,3 +43,8 @@ class ESVParser(BibleParser):
                         versetext += ' '+item.childNodes[posid].firstChild.nodeValue.strip()
                 if versenum > 0:
                     self.bookcontent[chap][versenum] = re.sub('\\s+', ' ', versetext)
+
+    def retrieveVersesIterator(self, bookabbr, startChap, startVerse, endChap, endVerse):
+        if bookabbr != self.currentbook:
+            self.parseBook(bookabbr)
+        return BibleParser.retrieveVersesIterator(self, bookabbr, startChap, startVerse, endChap, endVerse)

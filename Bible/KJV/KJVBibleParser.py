@@ -106,6 +106,11 @@ bknameref = {
 }
 
 class KJVParser(BibleParser):
+    def __init__(self, bookdir, chaptuples=None):
+        BibleParser.__init__(self)
+        self.bookdir = bookdir
+        self.bookcontent = {}
+        self.chaptuples = chaptuples
 
     def parseBook(self, bookabbr):
         filepath = self.bookdir+'/'+'kjvdat.txt'
@@ -128,5 +133,7 @@ class KJVParser(BibleParser):
         bibdat.close()
         self.bookcontent = dict(self.bookcontent)
 
-
-
+    def retrieveVersesIterator(self, bookabbr, startChap, startVerse, endChap, endVerse):
+        if bookabbr != self.currentbook:
+            self.parseBook(bookabbr)
+        return BibleParser.retrieveVersesIterator(self, bookabbr, startChap, startVerse, endChap, endVerse)
