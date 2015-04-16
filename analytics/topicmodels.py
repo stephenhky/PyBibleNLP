@@ -34,14 +34,17 @@ class TopicModeler:
     def numTopics(self):
         return self.model.num_topics
 
-    def queryDocs(self, queryToken):
+    def reducedVec(self, queryToken):
         stemmedToken = self.stemfunc(queryToken)
         if not self.dictionary.token2id.has_key(stemmedToken):
             raise TokenNotFoundException(queryToken)
+        bow = self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(stemmedToken))
         if self.toweight:
-            reducedvec = self.model[ self.tfidf[self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(stemmedToken))]]
-        else:
-            reducedvec = self.model[ self.dictionary.doc2bow( self.vectorizer.tokenizeDoc(stemmedToken))]
+            bow = self.tfidf[bow]
+        return self.model[bow]
+
+    def queryDocs(self, queryToken):
+        reducedvec = self.reducedVec(queryToken)
         sims = self.index[reducedvec]
         simtuples = zip(range(len(sims)), sims) if self.doctuples==None else zip(self.doctuples, sims)
         simtuples = sorted(simtuples, key=lambda item: item[1], reverse=True)
